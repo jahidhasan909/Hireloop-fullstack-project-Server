@@ -44,6 +44,20 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/api/job', async (req, res) => {
+            const query = {}
+            if (req.query.companyId) {
+                query.companyId = req.query.companyId
+            }
+            if (req.query.status) {
+                query.status = req.query.status
+            }
+
+            const result = await jobCollaction.find(query).toArray()
+            res.send(result)
+
+        })
+
 
 
 
