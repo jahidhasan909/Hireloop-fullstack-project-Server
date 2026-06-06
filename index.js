@@ -35,6 +35,7 @@ async function run() {
 
         const database = client.db("hireloop");
         const jobCollaction = database.collection("alljobs");
+        const companyCollaction=database.collection('companis');
 
 
 
@@ -56,6 +57,13 @@ async function run() {
             const result = await jobCollaction.find(query).toArray()
             res.send(result)
 
+        })
+
+
+        app.post('/api/company', async (req, res) => {
+            const company = req.body
+            const result = await companyCollaction.insertOne(company)
+            res.send(result)
         })
 
 
