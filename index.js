@@ -41,7 +41,11 @@ async function run() {
 
         app.post('/api/job', async (req, res) => {
             const doc = req.body
-            const result = await jobCollaction.insertOne(doc)
+            const newJob = {
+                ...doc,
+                createdAt: new Date()
+            }
+            const result = await jobCollaction.insertOne(newJob)
             res.send(result)
         })
 
@@ -55,15 +59,19 @@ async function run() {
             }
 
             const result = await jobCollaction.find(query).toArray()
-            res.send(result)
+            res.json(result)
 
         })
 
 
         app.post('/api/company', async (req, res) => {
             const company = req.body
-            const result = await companyCollaction.insertOne(company)
-            res.send(result)
+            const makecompany = {
+                ...company,
+                createdAt: new Date()
+            }
+            const result = await companyCollaction.insertOne(makecompany)
+            res.json(result)
         })
 
         app.get('/api/my/company', async (req, res) => {
@@ -74,7 +82,7 @@ async function run() {
                 query.recruiterId = req.query.recruiterId
             }
             const result = await companyCollaction.findOne(query)
-            res.send(result)
+            res.json(result || {})
 
         })
 
