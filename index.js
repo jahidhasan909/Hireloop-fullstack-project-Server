@@ -88,8 +88,23 @@ async function run() {
         app.post('/api/application', async (req, res) => {
             const doc = req.body
             const result = await applyJobCollaction.insertOne(doc)
+            res.json(result)
         })
 
+        app.get('/api/application', async (req, res) => {
+            const query = {}
+            if (req.query.applicantId) {
+                query.applicantId = req.query.applicantId
+            }
+
+            if (req.query.jobId) {
+                query.jobId = req.query.jobId
+            }
+
+            const cursor = await applyJobCollaction.find(query).toArray()
+            res.json(cursor)
+
+        })
 
 
         app.get('/api/my/company', async (req, res) => {
