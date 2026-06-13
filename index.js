@@ -37,7 +37,9 @@ async function run() {
         const jobCollaction = database.collection("alljobs");
         const companyCollaction = database.collection('companis');
         const applyJobCollaction = database.collection('applyjobs')
-
+        const planscollaction = database.collection('plans')
+        const subscriptionsCollaction = database.collection('subscriptions')
+        const userCollaction = database.collection('user')
 
 
         app.post('/api/job', async (req, res) => {
@@ -119,8 +121,52 @@ async function run() {
 
         })
 
+        app.get('/api/plans', async (req, res) => {
+            const query = {}
+
+            if (req.query.id) {
+                query.id = req.query.id
+            }
+            const result = await planscollaction.findOne(query)
+            res.json(result)
+        })
 
 
+
+        app.post('/api/subscription', async (req, res) => {
+            try {
+                const data = req.body;
+               
+                
+                const subInfo = {
+                    ...data,
+                    createdAt: new Date()
+                };
+
+
+                const submit = await subscriptionsCollaction.insertOne(subInfo);
+
+
+                const filter = { email: data.email };
+
+
+                const updateDocument = {
+                    $set: {
+                        plan: data.planId,
+                    },
+                };
+
+
+                const result = await userCollaction.updateOne(filter, updateDocument);
+
+
+                res.json({ success: true, result });
+
+            } catch (error) {
+                console.error("Subscription Error:", error);
+                res.status(500).json({ error: "Internal Server Error" });
+            }
+        });
 
 
 
