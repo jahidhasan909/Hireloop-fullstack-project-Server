@@ -121,6 +121,25 @@ async function run() {
 
         })
 
+        app.get('/api/companies', async (req, res) => {
+
+            const result = await companyCollaction.find().toArray()
+            res.json(result)
+        })
+
+        app.patch(`/api/companies/:id`, async (req, res) => {
+            const id = req.params.id
+            const updateone = req.body
+            const fillter = { _id: new ObjectId(id) }
+            const updateDocument = {
+                $set: {
+                    status: updateone.status
+                }
+            }
+            const result = await companyCollaction.updateOne(fillter, updateDocument)
+            res.json(result)
+        })
+
         app.get('/api/plans', async (req, res) => {
             const query = {}
 
@@ -136,8 +155,8 @@ async function run() {
         app.post('/api/subscription', async (req, res) => {
             try {
                 const data = req.body;
-               
-                
+
+
                 const subInfo = {
                     ...data,
                     createdAt: new Date()
